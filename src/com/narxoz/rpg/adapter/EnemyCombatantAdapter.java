@@ -4,35 +4,40 @@ import com.narxoz.rpg.battle.Combatant;
 import com.narxoz.rpg.enemy.Enemy;
 
 public class EnemyCombatantAdapter implements Combatant {
-
     private final Enemy enemy;
+    private int currentHealth;
 
     public EnemyCombatantAdapter(Enemy enemy) {
         this.enemy = enemy;
+        this.currentHealth = enemy.getHealth();
     }
 
     @Override
     public String getName() {
-        return enemy.getTitle();
-    }
-
-    @Override
-    public int getHealth() {
-        return enemy.getHealth();
+        return enemy.getName();
     }
 
     @Override
     public int getAttackPower() {
-        return enemy.getDamage();
+        return Math.max(1, enemy.getDamage());
     }
 
     @Override
     public void takeDamage(int amount) {
-        enemy.applyDamage(amount);
+        int dmg = Math.max(0, amount);
+
+        dmg = Math.max(0, dmg - enemy.getDefense());
+
+        currentHealth -= dmg;
+        if (currentHealth < 0) currentHealth = 0;
     }
 
     @Override
     public boolean isAlive() {
-        return !enemy.isDefeated();
+        return currentHealth > 0;
+    }
+
+    public int getCurrentHealth() {
+        return currentHealth;
     }
 }

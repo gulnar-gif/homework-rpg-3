@@ -1,14 +1,17 @@
 package com.narxoz.rpg.adapter;
 
 import com.narxoz.rpg.battle.Combatant;
-import com.narxoz.rpg.hero.Hero;
+import com.narxoz.rpg.character.Character;
+import com.narxoz.rpg.equipment.Armor;
+import com.narxoz.rpg.equipment.Weapon;
 
 public class HeroCombatantAdapter implements Combatant {
+    private final Character hero;
+    private int currentHealth;
 
-    private final Hero hero;
-
-    public HeroCombatantAdapter(Hero hero) {
+    public HeroCombatantAdapter(Character hero) {
         this.hero = hero;
+        this.currentHealth = hero.getHealth();
     }
 
     @Override
@@ -17,22 +20,34 @@ public class HeroCombatantAdapter implements Combatant {
     }
 
     @Override
-    public int getHealth() {
-        return hero.getHealth();   // HP аудару
-    }
-
-    @Override
     public int getAttackPower() {
-        return hero.getPower();    // Power → Attack
+        int power = hero.getStrength();
+
+        Weapon w = hero.getWeapon();
+        if (w != null) power += w.getDamage();
+        power += hero.getIntelligence() / 4;
+
+        return Math.max(1, power);
     }
 
     @Override
     public void takeDamage(int amount) {
-        hero.receiveDamage(amount);
+        int dmg = Math.max(0, amount);
+
+        Armor a = hero.getArmor();
+        if (a != null) dmg = Math.max(0, dmg - a.getDefense());
+
+        currentHealth -= dmg;
+        if (currentHealth < 0) currentHealth = 0;
     }
 
     @Override
     public boolean isAlive() {
-        return hero.isAlive();
+        return currentHealth > 0;
+    }
+
+
+    public int getCurrentHealth() {
+        return currentHealth;
     }
 }
