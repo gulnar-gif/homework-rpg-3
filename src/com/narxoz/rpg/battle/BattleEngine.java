@@ -1,7 +1,6 @@
 package com.narxoz.rpg.battle;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -98,8 +97,7 @@ public final class BattleEngine {
                 continue;
             }
 
-            int targetIndex = random.nextInt(defenders.size());
-            Combatant target = defenders.get(targetIndex);
+            Combatant target = defenders.get(0);
 
             int damage = attacker.getAttackPower();
             if (damage < 0) damage = 0;
@@ -108,12 +106,13 @@ public final class BattleEngine {
 
             result.addLog(attackerLabel + " " + attacker.getName()
                     + " атакует " + defenderLabel + " " + target.getName()
-                    + " и наносит " + damage+ " урона");
+                    + " и наносит " + damage + " урона");
 
             if (!target.isAlive()) {
                 result.addLog(defenderLabel + " " + target.getName() + " погиб!");
-                defenders.remove(targetIndex);
+                defenders.remove(0);
             }
+
 
             i++;
         }

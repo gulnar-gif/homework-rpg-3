@@ -1,0 +1,30 @@
+@startuml
+title UML 1 - Singleton: BattleEngine
+
+class BattleEngine {
+  - static instance : BattleEngine
+  - random : Random
+  - BattleEngine()
+  + static getInstance() : BattleEngine
+  + setRandomSeed(seed: long) : BattleEngine
+  + reset() : void
+  + runEncounter(teamA: List<Combatant>, teamB: List<Combatant>) : EncounterResult
+}
+
+class EncounterResult {
+  - winner : String
+  - rounds : int
+  - battleLog : List<String>
+  + setWinner(winner: String) : void
+  + setRounds(rounds: int) : void
+  + addLog(line: String) : void
+  + getWinner() : String
+  + getRounds() : int
+  + getBattleLog() : List<String>
+}
+
+interface Combatant
+
+BattleEngine --> EncounterResult
+BattleEngine --> Combatant : uses
+@enduml
